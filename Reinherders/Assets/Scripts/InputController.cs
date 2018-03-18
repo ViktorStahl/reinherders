@@ -6,14 +6,52 @@ public class InputController : MonoBehaviour {
     public float moveCameraHorizontal = 0f;
     public float moveCameraVertical = 0f;
     public float zoomLevel = 1f;
+    public UnitController unitController;
 
     private float borderTreshold = 0.1f;
-
+    private bool leftPressed = false;
+    private bool rightPressed = false;
     void Update() {
         //Debug.Log("Debug: " + "Hello world");
         UpdateHorizontal();
         UpdateVertical();
         UpdateZoom();
+        UpdateLeftClick();
+        UpdateRightClick();
+    }
+
+    void UpdateLeftClick()
+    {
+        if (Input.GetAxisRaw("LeftPress") == 0 && leftPressed == true)
+        {
+            Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            bool additative = (Input.GetKey(KeyCode.LeftShift)); // Fix to allow to remake hotkeys?
+            unitController.Select(mouseRay, additative);
+        }
+        if (Input.GetAxisRaw("LeftPress") == 1)
+        {
+            leftPressed = true;
+        } else
+        {
+            leftPressed = false;
+        }
+    }
+
+    void UpdateRightClick()
+    {
+        if (Input.GetAxisRaw("RightPress") == 0 && rightPressed == true)
+        {
+            Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            unitController.RightClick(mouseRay);
+        }
+        if (Input.GetAxisRaw("RightPress") == 1)
+        {
+            rightPressed = true;
+        }
+        else
+        {
+            rightPressed = false;
+        }
     }
 
     private void UpdateZoom()
